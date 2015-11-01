@@ -12,7 +12,8 @@ import java.util.List;
 public class AnalisadorGramaticalJAVA {
 
     /**
-     * Valor inteiro que vai compara os Tokens
+     * Valor inteiro que vai comparar os Tokens
+     * E que guarda o (Token int) atual.
      */
     private Integer lookahead;
     /**
