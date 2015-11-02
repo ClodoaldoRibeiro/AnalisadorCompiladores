@@ -12,16 +12,16 @@ import java.util.List;
 public class AnalisadorGramaticalJAVA {
 
     /**
-     * Valor inteiro que vai comparar os Tokens E que guarda o (Token int)
-     * atual.
+     * Valor inteiro que vai comparar os Tokens
+     * E que guarda o (Token int) atual.
      */
-    private Integer lookahead = 0;
+    private Integer lookahead;
     /**
      * Usado para manter o controle dos Tokens armazenados na listITokens.<p>
      * Pesquisa um Objeto em uma determinada posição na Lista.
      */
-    private int index = 0;
-    private int indice = 0;
+    private int index;
+    private int indice;
     private List<Integer> listITokens; // Guarda todos os Tokens 
 
     public AnalisadorGramaticalJAVA(Integer lookahead) {
@@ -36,18 +36,15 @@ public class AnalisadorGramaticalJAVA {
         if (lookahead == token) {
             index++;
             lookahead = proximo_token();
-
-            if (token == ValueEnum.ID.getValue()) {
+            
+            if(token == ValueEnum.ID.getValue())
                 lookahead = proximo_token();
-            }
-
-            if (token == ValueEnum.NUM.getValue()) {
+            
+            if(token == ValueEnum.NUM.getValue())
                 lookahead = proximo_token();
-            }
-
-            if (token == ValueEnum.OP_RELACIONAL.getValue()) {
-                lookahead = proximo_token();
-            }
+            
+            if(token == ValueEnum.OP_RELACIONAL.getValue())
+            lookahead = proximo_token();
 
         } else {
             error(token);
@@ -83,10 +80,9 @@ public class AnalisadorGramaticalJAVA {
 
     }
 
-    // Procura o prómixo tokem na lista de tokens .
     public int proximo_token() throws IOException {
 
-        File arq = new File("D:\\Clodoaldo\\Facape\\7° Periodo\\Compiladores\\Unidade II\\Analisador-Compiladores\\src\\lexer\\Tokens.txt");
+        File arq = new File("/home/lucas/NetBeansProjects/Analisador Compiladores/src/lexer/Tokens.txt");
         BufferedReader leitor;
         try (FileReader reader = new FileReader(arq)) {
             leitor = new BufferedReader(reader);
@@ -140,14 +136,13 @@ public class AnalisadorGramaticalJAVA {
         System.out.print(" |__" + s + "\n");
     }
 
-    // Corpo da classe.
     private void classBody() throws IOException, Exception {
         indice++;
         arvore(indice, "classBody");
         if (lookahead == ValueEnum.ABRE_CHAVE.getValue()) {
             Reconhecer(ValueEnum.ABRE_CHAVE.getValue());
             arvore(indice + 1, "{");
-
+            
             classBodyDeclaration();
 
             Reconhecer(ValueEnum.FECHA_CHAVE.getValue());
@@ -155,15 +150,11 @@ public class AnalisadorGramaticalJAVA {
         }
     }
 
-    //Métado que faz a declaração do corpo da classe...
     private void classBodyDeclaration() throws IOException, Exception {
         indice++;
         arvore(indice + 1, "classBodyDeclaration");
 
-        //Métado que que teste declaração de atributos da Classe. 
         declarationList();
-
-        // Métado que faz a declaração de métados dentro da classe.
         methodDeclaration();
         indice--;
     }
@@ -210,7 +201,7 @@ public class AnalisadorGramaticalJAVA {
         arvore(indice, "methodName");
         Reconhecer(ValueEnum.PUBLIC.getValue());
         methodName_L1();
-
+        
         indice--;
     }
 
@@ -300,7 +291,7 @@ public class AnalisadorGramaticalJAVA {
             arvore(indice + 1, "(");
 
             formalParameters();
-
+            
             Reconhecer(ValueEnum.FECHA_PAR.getValue());
             arvore(indice - 1, ")");
 
@@ -308,7 +299,7 @@ public class AnalisadorGramaticalJAVA {
             arvore(indice + 1, "{");
 
             methodBody();
-
+            
             Reconhecer(ValueEnum.FECHA_CHAVE.getValue());
             arvore(indice++, "}");
         }
@@ -329,7 +320,7 @@ public class AnalisadorGramaticalJAVA {
             arvore(indice + 1, "(");
 
             Reconhecer(ValueEnum.STRING.getValue());
-            arvore(indice + 1, "String");
+            arvore(indice + 1, "string");
 
             Reconhecer(ValueEnum.ARG.getValue());
             arvore(indice + 1, "arg");
@@ -437,18 +428,18 @@ public class AnalisadorGramaticalJAVA {
     }
 
     private void statement() {
-
+        
     }
 
     private void statementList_L1() {
         indice++;
         arvore(indice++, "statementList_L1");
         statement();
-
+        
         System.out.println(" *** VAZIO *** \n");
     }
-
-    private void expressionList() throws IOException {
+    
+    private void expressionList() throws IOException{
         indice++;
         arvore(indice++, "expressionList");
         expression();
@@ -465,7 +456,7 @@ public class AnalisadorGramaticalJAVA {
         arvore(indice++, "expressionList_L1");
         expression();
         expressionList_L1();
-
+        
         System.out.println(" *** VAZIO *** \n");
     }
 }
