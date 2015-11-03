@@ -508,18 +508,25 @@ public class AnalisadorGramaticalJAVA {
             Reconhecer(ValueEnum.ABRE_PAR.getValue());
             arvore(indice + 1, ")");
 
-            // aqui vai a função expressao
+            expression();
+            
             Reconhecer(ValueEnum.FECHA_PAR.getValue());
             arvore(indice + 1, ")");
 
 //            Faltou implementar os dois metados.
-//            statementBlock();
 //            elseAlternative();
         }
+        statementBlock();
+
     }
 
     private void whileStatement() {
 
+    }
+
+    private void statementBlock() {
+//        statementBlock → statement();
+//                | abre_chave statementList fecha_chave
     }
 
 }
