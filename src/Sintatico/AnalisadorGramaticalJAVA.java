@@ -12,8 +12,8 @@ import java.util.List;
 public class AnalisadorGramaticalJAVA {
 
     /**
-     * Valor inteiro que vai comparar os Tokens
-     * E que guarda o (Token int) atual.
+     * Valor inteiro que vai comparar os Tokens E que guarda o (Token int)
+     * atual.
      */
     private Integer lookahead;
     /**
@@ -36,15 +36,18 @@ public class AnalisadorGramaticalJAVA {
         if (lookahead == token) {
             index++;
             lookahead = proximo_token();
-            
-            if(token == ValueEnum.ID.getValue())
+
+            if (token == ValueEnum.ID.getValue()) {
                 lookahead = proximo_token();
-            
-            if(token == ValueEnum.NUM.getValue())
+            }
+
+            if (token == ValueEnum.NUM.getValue()) {
                 lookahead = proximo_token();
-            
-            if(token == ValueEnum.OP_RELACIONAL.getValue())
-            lookahead = proximo_token();
+            }
+
+            if (token == ValueEnum.OP_RELACIONAL.getValue()) {
+                lookahead = proximo_token();
+            }
 
         } else {
             error(token);
@@ -82,7 +85,7 @@ public class AnalisadorGramaticalJAVA {
 
     public int proximo_token() throws IOException {
 
-        File arq = new File("/home/lucas/NetBeansProjects/Analisador Compiladores/src/lexer/Tokens.txt");
+        File arq = new File("D:\\Clodoaldo\\Facape\\7° Periodo\\Compiladores\\Unidade II\\Analisador-Compiladores\\src\\lexer\\Tokens.txt");
         BufferedReader leitor;
         try (FileReader reader = new FileReader(arq)) {
             leitor = new BufferedReader(reader);
@@ -142,7 +145,7 @@ public class AnalisadorGramaticalJAVA {
         if (lookahead == ValueEnum.ABRE_CHAVE.getValue()) {
             Reconhecer(ValueEnum.ABRE_CHAVE.getValue());
             arvore(indice + 1, "{");
-            
+
             classBodyDeclaration();
 
             Reconhecer(ValueEnum.FECHA_CHAVE.getValue());
@@ -201,7 +204,7 @@ public class AnalisadorGramaticalJAVA {
         arvore(indice, "methodName");
         Reconhecer(ValueEnum.PUBLIC.getValue());
         methodName_L1();
-        
+
         indice--;
     }
 
@@ -211,21 +214,27 @@ public class AnalisadorGramaticalJAVA {
         switch (lookahead) {
             case 320: // boolean
                 lookahead = ValueEnum.BOOLEAN.getValue();
+                Reconhecer(ValueEnum.BOOLEAN.getValue());
                 break;
             case 610: // char
                 lookahead = ValueEnum.CHAR.getValue();
+                Reconhecer(ValueEnum.CHAR.getValue());
                 break;
             case 292: // float
                 lookahead = ValueEnum.FLOAT.getValue();
+                Reconhecer(ValueEnum.FLOAT.getValue());
                 break;
             case 400: // int
                 lookahead = ValueEnum.INT.getValue();
+                Reconhecer(ValueEnum.INT.getValue());
                 break;
             case 630: // string
                 lookahead = ValueEnum.STRING.getValue();
+                Reconhecer(ValueEnum.STRING.getValue());
                 break;
             case 470: // void
                 lookahead = ValueEnum.VOID.getValue();
+                Reconhecer(ValueEnum.VOID.getValue());
                 break;
             default:
                 System.out.println(" *** VAZIO *** \n");
@@ -291,7 +300,7 @@ public class AnalisadorGramaticalJAVA {
             arvore(indice + 1, "(");
 
             formalParameters();
-            
+
             Reconhecer(ValueEnum.FECHA_PAR.getValue());
             arvore(indice - 1, ")");
 
@@ -299,7 +308,7 @@ public class AnalisadorGramaticalJAVA {
             arvore(indice + 1, "{");
 
             methodBody();
-            
+
             Reconhecer(ValueEnum.FECHA_CHAVE.getValue());
             arvore(indice++, "}");
         }
@@ -320,10 +329,16 @@ public class AnalisadorGramaticalJAVA {
             arvore(indice + 1, "(");
 
             Reconhecer(ValueEnum.STRING.getValue());
-            arvore(indice + 1, "string");
+            arvore(indice + 1, "String");
 
             Reconhecer(ValueEnum.ARG.getValue());
             arvore(indice + 1, "arg");
+
+            Reconhecer(ValueEnum.ABRE_COLCHETE.getValue());
+            arvore(indice + 1, "[");
+
+            Reconhecer(ValueEnum.FECHA_COLCHETE.getValue());
+            arvore(indice + 1, "]");
 
             Reconhecer(ValueEnum.FECHA_PAR.getValue());
             arvore(indice + 1, ")");
@@ -395,9 +410,11 @@ public class AnalisadorGramaticalJAVA {
         indice--;
     }
 
+    // Este medato.
     private void methodBody() throws IOException {
         indice++;
         arvore(indice, "methodBody");
+
         declarationList();
         statementList();
     }
@@ -420,43 +437,89 @@ public class AnalisadorGramaticalJAVA {
         }
     }
 
-    private void statementList() {
+    private void statementList() throws IOException {
         indice++;
         arvore(indice++, "statementList");
         statement();
         statementList_L1();
     }
 
-    private void statement() {
-        
+    private void statement() throws IOException {
+
+        ifStatement();
+
+        whileStatement();
     }
 
-    private void statementList_L1() {
+    private void statementList_L1() throws IOException {
         indice++;
         arvore(indice++, "statementList_L1");
         statement();
-        
+
         System.out.println(" *** VAZIO *** \n");
     }
-    
-    private void expressionList() throws IOException{
+
+    private void expressionList() throws IOException {
         indice++;
         arvore(indice++, "expressionList");
         expression();
         expressionList_L1();
     }
 
-    private void expression() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private void expression() throws IOException {
+        indice++;
+        arvore(indice++, "expression");
+
+//        literal();
+//        expression();
+//        
+//        ’ | abrepar expression fecharpar expression
+//        ’ | operador_aditivo expression
+//        ’ 
+        expression_L1();
+    }
+
+    private void expression_L1() throws IOException {
+        indice++;
+        arvore(indice, "expression_L1");
+        Reconhecer(ValueEnum.OP_ADITIVO.getValue());
     }
 
     private void expressionList_L1() throws IOException {
         indice++;
-        Reconhecer(ValueEnum.VIRGULA.getValue());
         arvore(indice++, "expressionList_L1");
+
+        Reconhecer(ValueEnum.VIRGULA.getValue());
+
         expression();
         expressionList_L1();
-        
+
         System.out.println(" *** VAZIO *** \n");
     }
+
+    // Valida um comando if..
+    private void ifStatement() throws IOException {
+        indice++;
+        arvore(indice, "ifStatement");
+
+        if (lookahead == ValueEnum.IF.getValue()) {
+            Reconhecer(ValueEnum.IF.getValue());
+
+            Reconhecer(ValueEnum.ABRE_PAR.getValue());
+            arvore(indice + 1, ")");
+
+            // aqui vai a função expressao
+            Reconhecer(ValueEnum.FECHA_PAR.getValue());
+            arvore(indice + 1, ")");
+
+//            Faltou implementar os dois metados.
+//            statementBlock();
+//            elseAlternative();
+        }
+    }
+
+    private void whileStatement() {
+
+    }
+
 }
